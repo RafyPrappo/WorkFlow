@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'task_list_screen.dart';
+import 'weekly_planner_screen.dart';
+import 'pomodoro_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -58,19 +60,21 @@ class HomeScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const TaskListScreen(),
+                builder: (context) => const WeeklyPlannerScreen(),
               ),
             );
           } else if (index == 1) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Pomodoro Timer coming soon!'),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const TaskListScreen(),
               ),
             );
           } else if (index == 2) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Analytics coming soon!'),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PomodoroScreen(),
               ),
             );
           }
@@ -81,12 +85,12 @@ class HomeScreen extends StatelessWidget {
             label: 'Weekly',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.timer),
-            label: 'Pomodoro',
+            icon: Icon(Icons.list),
+            label: 'Tasks',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.analytics),
-            label: 'Stats',
+            icon: Icon(Icons.timer),
+            label: 'Pomodoro',
           ),
         ],
       ),

@@ -4,6 +4,7 @@ import 'screens/home_screen.dart';
 import 'services/auth_service.dart';
 import 'package:provider/provider.dart';
 import 'services/task_service.dart';
+import 'services/pomodoro_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider(create: (context) => AuthService()),
         ChangeNotifierProvider(create: (context) => TaskService()),
+        ChangeNotifierProvider(create: (context) => PomodoroService()),
       ],
       child: MaterialApp(
         title: 'WorkFlow Productivity',
