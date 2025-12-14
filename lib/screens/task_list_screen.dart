@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/task_service.dart';
 import '../models/task.dart';
+import 'add_edit_task_screen.dart'; // ADD THIS IMPORT
 
 class TaskListScreen extends StatelessWidget {
   const TaskListScreen({super.key});
@@ -17,10 +18,10 @@ class TaskListScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              // TODO: Navigate to add task screen
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Add Task screen coming soon!'),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AddEditTaskScreen(),
                 ),
               );
             },
@@ -36,10 +37,10 @@ class TaskListScreen extends StatelessWidget {
       body: _buildTaskList(context, taskService),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Navigate to add task screen
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Add Task screen coming soon!'),
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddEditTaskScreen(),
             ),
           );
         },
@@ -158,17 +159,51 @@ class TaskListScreen extends StatelessWidget {
             ),
           ],
         ),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete_outline, color: Colors.red),
-          onPressed: () {
-            _showDeleteDialog(context, task, taskService);
+        trailing: PopupMenuButton<String>(
+          itemBuilder: (context) => [
+            const PopupMenuItem(
+              value: 'edit',
+              child: Row(
+                children: [
+                  Icon(Icons.edit, size: 20),
+                  SizedBox(width: 8),
+                  Text('Edit Task'),
+                ],
+              ),
+            ),
+            const PopupMenuItem(
+              value: 'delete',
+              child: Row(
+                children: [
+                  Icon(Icons.delete, color: Colors.red, size: 20),
+                  SizedBox(width: 8),
+                  Text('Delete', style: TextStyle(color: Colors.red)),
+                ],
+              ),
+            ),
+          ],
+          onSelected: (value) {
+            if (value == 'edit') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddEditTaskScreen(task: task),
+                ),
+              );
+            } else if (value == 'delete') {
+              _showDeleteDialog(context, task, taskService);
+            }
           },
+          child: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Icon(Icons.more_vert),
+          ),
         ),
         onTap: () {
-          // TODO: Navigate to edit task screen
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Editing: ${task.title}'),
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddEditTaskScreen(task: task),
             ),
           );
         },
