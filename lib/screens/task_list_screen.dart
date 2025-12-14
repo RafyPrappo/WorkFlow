@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/task_service.dart';
 import '../models/task.dart';
-import 'add_edit_task_screen.dart'; // ADD THIS IMPORT
+import 'add_edit_task_screen.dart';
 
 class TaskListScreen extends StatelessWidget {
   const TaskListScreen({super.key});
@@ -26,12 +26,7 @@ class TaskListScreen extends StatelessWidget {
               );
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              taskService.addSampleTasks();
-            },
-          ),
+          // REMOVED the refresh/sample tasks button
         ],
       ),
       body: _buildTaskList(context, taskService),
@@ -64,9 +59,15 @@ class TaskListScreen extends StatelessWidget {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                taskService.addSampleTasks();
+                // Changed from addSampleTasks to navigate to add task screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddEditTaskScreen(),
+                  ),
+                );
               },
-              child: const Text('Add Sample Tasks'),
+              child: const Text('Create Your First Task'),
             ),
           ],
         ),

@@ -40,6 +40,20 @@ class _HomeScreenState extends State<HomeScreen> {
     return DateFormat('MMM dd').format(date);
   }
 
+  // priority colors
+  Color _getPriorityColor(Priority priority) {
+    switch (priority) {
+      case Priority.low:
+        return Colors.green;
+      case Priority.medium:
+        return Colors.blue;
+      case Priority.high:
+        return Colors.orange;
+      case Priority.critical:
+        return Colors.red;
+    }
+  }
+
   // Check if date is today
   bool _isToday(DateTime date) {
     final now = DateTime.now();
@@ -107,16 +121,46 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 8),
 
-                  // DATE NUMBERS ROW
+                  // DATE NUMBERS ROW - UPDATED WITH PRIORITY HIGHLIGHTING
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: _weekDates.map((date) {
-                      return Text(
-                        date.day.toString(),
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: _isToday(date) ? Colors.blue : Colors.black,
+                      final highestPriority = taskService.getHighestPriorityForDay(date);
+                      final hasIncompleteTasks = highestPriority != null;
+                      final isToday = _isToday(date);
+
+                      return Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: isToday
+                              ? Colors.blue
+                              : hasIncompleteTasks
+                              ? _getPriorityColor(highestPriority!).withOpacity(0.2)
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: isToday
+                                ? Colors.blue
+                                : hasIncompleteTasks
+                                ? _getPriorityColor(highestPriority!)
+                                : Colors.transparent,
+                            width: 2,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            date.day.toString(),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: isToday
+                                  ? Colors.white
+                                  : hasIncompleteTasks
+                                  ? _getPriorityColor(highestPriority!)
+                                  : Colors.black,
+                            ),
+                          ),
                         ),
                       );
                     }).toList(),
@@ -124,16 +168,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   const SizedBox(height: 4),
 
-                  // DAY ABBREVIATIONS ROW
+                  // DAY ABBREVIATIONS ROW - UPDATED
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: _weekDates.map((date) {
-                      return Text(
-                        _getDayAbbreviation(date),
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: _isToday(date) ? Colors.blue : Colors.grey[600],
-                          fontWeight: _isToday(date) ? FontWeight.bold : FontWeight.normal,
+                      final highestPriority = taskService.getHighestPriorityForDay(date);
+                      final hasIncompleteTasks = highestPriority != null;
+                      final isToday = _isToday(date);
+
+                      return Container(
+                        width: 32,
+                        child: Center(
+                          child: Text(
+                            _getDayAbbreviation(date),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: isToday
+                                  ? Colors.blue
+                                  : hasIncompleteTasks
+                                  ? _getPriorityColor(highestPriority!)
+                                  : Colors.grey[600],
+                              fontWeight: isToday || hasIncompleteTasks
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                          ),
                         ),
                       );
                     }).toList(),
